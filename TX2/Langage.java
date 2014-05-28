@@ -22,6 +22,7 @@ public class Langage {
 	
 	langue[] lng=new langue[2];
 	private int num_lang=0;
+	private int taille_cle_max=15;
 	
 	
 
@@ -129,6 +130,42 @@ public class Langage {
 					res[i]=res[j];
 					res[j]=tmp;
 				}
+		return res;
+	}
+	
+	// battacharya allow to compare 2 histogram
+	public double batta(double[] h1,double[] h2)
+	{
+		double res=0;
+		for(int i=0;i<26;i++)
+		{	
+			res+=Math.sqrt(h1[i]*h2[i]);
+		}
+		return res;
+		
+	}
+	
+	
+	// compare with the actual langage for every key size
+	public double[] compare_key_size(String texte)
+	{
+		
+		double langue[] = make_percent_order(lng[num_lang].get_texte());
+		double res[] = new double[taille_cle_max];
+		
+		
+		for(int i=0;i<taille_cle_max;i++)
+		{
+			// find the actual text
+			String text_actu="";
+			int size=i+1;
+			for(int j=0;j<texte.length();j++)
+			{
+				if((j+1)%size==0)text_actu+=texte.charAt(j);
+			}
+			double txt[] = make_percent_order(text_actu);
+			res[i]=batta(txt,langue);
+		}
 		return res;
 	}
 	
@@ -272,14 +309,14 @@ public class Langage {
 	
 	//Crypt or uncrypt the text thanks to the key.
 	//crypt_uncrypt take 0 for uncryption and 1 for crypt.
-	public void crypt(boolean crypt){
+	public void crypt(){
 		char[] acrypt = new char[text_uncrypt.length()];
 		int ch;
 			for(int i=0;i<text_uncrypt.length();i++)
 			{
 				
 				ch = Character.getNumericValue(text_uncrypt.charAt(i)) -10;
-				acrypt[i]=(char) (((int)key.charAt(i%key.length()))+ch);
+				acrypt[i]=(char) ((((int)key.charAt(i%key.length()))-(int)'A'+ch)%26+(int)'A');
 			}
 			text_crypt=new String(acrypt);
 			text_crypt=text_crypt.toUpperCase();
@@ -304,12 +341,12 @@ public class Langage {
 	}
 
 	public boolean setKey(String key) {
-		if(key.length()==0) 
+		if(key.length()==0 || key.length()>taille_cle_max) 
 			{
 			JOptionPane.showMessageDialog(null,"Attention la clé doit faire 26 charactères");
 			return false;
 			}
-		this.key = key;
+		this.key = prepare(key);
 		return true;
 	}
 

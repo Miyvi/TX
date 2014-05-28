@@ -407,30 +407,14 @@ crypt.addActionListener(new ActionListener(){
 	public void actionPerformed(ActionEvent arg0) {
 		
 		if(area.isEnabled())
-		if(crypt.getText()=="Crypter")
 		{
-			if(lang.setKey(key.getText()))
-			{
-			lang.crypt(true);
-			crypt.setText("Décrypter");
+			lang.setKey(key.getText());
+			lang.crypt();
 			area.setText(lang.getText_crypt());
 			//maj_digrammes();
-			}
-			lang.make_percent_order(texte);
-		}
-		else
-		{
-			if(lang.setKey(key.getText()))
-			{
-			lang.crypt(false);
-			crypt.setText("Crypter");
-			area.setText(lang.getText_uncrypt());
-			modelist_dig1.clear();
-			modelist_dig2.clear();
-			cherche_cle=false;
-			}
-			
-			
+			double[]  order=lang.compare_key_size(lang.getText_crypt());
+			for(int i=0;i<order.length;i++) System.out.println(order[i]);
+			//lang.compare_key_size(lang.getText_crypt());
 		}
 		else JOptionPane.showMessageDialog(null,"Vous n'avez pas de texte à traiter");
 		
