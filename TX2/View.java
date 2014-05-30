@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -67,6 +68,7 @@ public class View extends JFrame{
 	private JList<Character> myList = new JList(modelist);
 	protected JScrollPane listecont;
 	private JPanel pinf = new JPanel();
+	private Histogramme hist = new Histogramme();
 	// digrammes
 	final DefaultListModel modelist_dig1 = new DefaultListModel();
 	private JList<Character> myList_dig1 = new JList(modelist_dig1);
@@ -171,7 +173,8 @@ public class View extends JFrame{
 		c.insets = new Insets(70,0,0,0);  //top padding
 		c.gridx = 1;       //aligned with button 2
 		c.gridy=0;
-		pinf.add(listecont,c);
+		pinf.add(hist,c);
+		hist.setPreferredSize( new Dimension(300,120));
 		
 		
 		myList.addListSelectionListener(new ListSelectionListener()
@@ -215,7 +218,7 @@ public class View extends JFrame{
 		c.gridy=0;
 		pinf.add(videgauche,c);
 		
-		JLabel etape2 = new JLabel("Etape 2 : Décrypter un texte sans clé");
+		JLabel etape2 = new JLabel("Etape 2 : Décrypter un texte sans clé : Recherche de la taille de la clé :");
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 0;       //reset to default
@@ -413,7 +416,9 @@ crypt.addActionListener(new ActionListener(){
 			area.setText(lang.getText_crypt());
 			//maj_digrammes();
 			double[]  order=lang.compare_key_size(lang.getText_crypt());
-			for(int i=0;i<order.length;i++) System.out.println(order[i]);
+			hist.setcourbe(order);
+			hist.paint(hist.getGraphics());
+			//for(int i=0;i<order.length;i++) System.out.println(order[i]);
 			//lang.compare_key_size(lang.getText_crypt());
 		}
 		else JOptionPane.showMessageDialog(null,"Vous n'avez pas de texte à traiter");
